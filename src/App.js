@@ -5,28 +5,24 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/analytics';
-import PropTypes from 'prop-types';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 firebase.initializeApp({
-  apiKey: "AIzaSyDk7VMMBwr6bqDsrzbUYGpnthHaMioYe2s",
-  authDomain: "chat-app-15946.firebaseapp.com",
-  projectId: "chat-app-15946",
-  storageBucket: "chat-app-15946.appspot.com",
-  messagingSenderId: "533178884935",
-  appId: "1:533178884935:web:ef9483d776d0107ffe6262",
-  measurementId: "G-P58VBCQ0SY"
-})
+  apiKey: 'AIzaSyAw0UkT9217PeDe0ol77m-C_9GFKd5clgE',
+  authDomain: 'act-2-3ec77.firebaseapp.com',
+  projectId: 'act-2-3ec77',
+  storageBucket: 'act-2-3ec77.appspot.com',
+  messagingSenderId: '78032180470',
+  appId: '1:78032180470:web:0c707bd789ae7a856388d7',
+});
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 const analytics = firebase.analytics();
 
-
 function App() {
-
   const [user] = useAuthState(auth);
 
   return (
@@ -45,27 +41,24 @@ function App() {
 }
 
 function SignIn() {
-
   const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider);
-  }
+  };
 
   return (
     <>
       <button className="sign-in" onClick={signInWithGoogle}>Sign in with Google</button>
       <p>Do not violate the community guidelines or you will be banned for life!</p>
     </>
-  )
-
+  );
 }
 
 function SignOut() {
   return auth.currentUser && (
     <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
-  )
+  );
 }
-
 
 function ChatRoom() {
   const dummy = useRef();
@@ -76,7 +69,6 @@ function ChatRoom() {
 
   const [formValue, setFormValue] = useState('');
 
-
   const sendMessage = async (e) => {
     e.preventDefault();
 
@@ -86,30 +78,32 @@ function ChatRoom() {
       text: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid,
-      photoURL
-    })
+      photoURL,
+    });
 
     setFormValue('');
     dummy.current.scrollIntoView({ behavior: 'smooth' });
-  }
+  };
 
-  return (<>
-    <main>
+  return (
+    <>
+      <main>
 
-      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+        {messages && messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
 
-      <span ref={dummy}></span>
+        <span ref={dummy} />
 
-    </main>
+      </main>
 
-    <form onSubmit={sendMessage}>
+      <form onSubmit={sendMessage}>
 
-      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something nice" />
+        <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something nice" />
 
-      <button type="submit" disabled={!formValue}>🕊️</button>
+        <button type="submit" disabled={!formValue}>🕊️</button>
 
-    </form>
-  </>)
+      </form>
+    </>
+  );
 }
 
 function ChatMessage(props) {
@@ -117,16 +111,14 @@ function ChatMessage(props) {
 
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
 
-  return (<>
-    <div className={`message ${messageClass}`}>
-      <img src={photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
-      <p>{text}</p>
-    </div>
-  </>)
+  return (
+    <>
+      <div className={`message ${messageClass}`}>
+        <img src={photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} alt="" />
+        <p>{text}</p>
+      </div>
+    </>
+  );
 }
-
-ChatMessage.propTypes = {
-  message: PropTypes.any,
-};
 
 export default App;
